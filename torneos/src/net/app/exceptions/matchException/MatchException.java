@@ -1,7 +1,7 @@
 package net.app.exceptions.matchException;
 
-public class MatchException extends Exception {
-    public MatchException(String msg) {
+public abstract class MatchException extends Exception {
+    protected MatchException(String msg) {
         super(msg);
     }
 }
