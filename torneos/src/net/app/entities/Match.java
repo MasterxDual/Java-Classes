@@ -5,6 +5,8 @@ import java.util.Map;
 
 import net.app.entities.utilities.Status;
 import net.app.exceptions.matchException.MatchException;
+import net.app.exceptions.matchException.MatchIsFinishedException;
+import net.app.exceptions.matchException.MatchIsInactiveException;
 import net.app.interfaces.IMatch;
 import net.app.interfaces.IPlayer;
 
@@ -23,41 +25,39 @@ public class Match implements IMatch {
         this.scores.put(player2, 0);
     }
 
-    //Done: implement the propper interface
     @Override
     public IPlayer getPlayer1() {
-        //Done: Auto-generated method stub
         return player1;
     }
 
     @Override
     public IPlayer getPlayer2() {
-        //Done: Auto-generated method stub
         return player2;
     }
 
     @Override
     public Status getStatus() {
-        //Done: Auto-generated method stub
         return state;
     }
 
     @Override
     public void setStatus(Status status) {
-        //Done: Auto-generated method stub
         this.state = status;
     }
 
     @Override
     public Map<IPlayer, Integer> getScores() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getScores'");
+        return scores;
     }
 
     @Override
     public void addScore(IPlayer player) throws MatchException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addScore'");
+        if(scores.containsKey(player) && (getStatus() == Status.ACTIVE)) {
+            scores.put(player, 1);
+        } else if(getStatus() == Status.FINISHED) {
+            throw new MatchIsFinishedException(player1.getName(), player2.getName());
+        } else if(getStatus() == Status.INACTIVE) {
+            throw new MatchIsInactiveException(player1.getName(), player2.getName());
+        }
     }
-    
 }
