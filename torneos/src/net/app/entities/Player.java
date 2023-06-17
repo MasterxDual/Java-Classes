@@ -6,40 +6,35 @@ public class Player implements IPlayer {
     String name;
     Integer totalScore;
 
-    public Player(String name, Integer totalScore) {
+    public Player(String name) {
         //Done: initialize Player data
         this.name = name;
-        this.totalScore = totalScore;
-        
+        this.totalScore = 0;
     }
 
     // Done: implement the propper interface
     @Override
     public String getName() {
-        //Done Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'getName'");
+        //Done: Auto-generated method stub
         return name;
     }
 
     @Override
     public int getTotalScore() {
         //Done: Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'getTotalScore'");
         return totalScore;
     }
 
     @Override
     public void incrementTotalScore() {
         //Done: Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'incrementTotalScore'");
-        totalScore += 1;
+        totalScore++;
     }
 
     @Override
     public void decrementTotalScore() {
         //Done: Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'decrementTotalScore'");
-        totalScore -= 1;
+        totalScore--;
     }
 
 }
