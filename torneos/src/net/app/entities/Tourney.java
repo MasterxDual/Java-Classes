@@ -53,13 +53,8 @@ public class Tourney implements ITourney {
     @Override
     public void generateMatches() {
         List<IPlayer> list = new ArrayList<>(playersSet);
-        IPlayer player1 = null;
-        for(int playerIndex=0; playerIndex<playersSet.size(); playerIndex++) {
-            if((playerIndex+1)%2==0) {
-                matches.add(new Match(player1, list.get(playerIndex)));
-            } else {
-                player1 = list.get(playerIndex);
-            }
+        for(int playerIndex=1; playerIndex<playersSet.size(); playerIndex+=2) {
+            matches.add(new Match(list.get(playerIndex-1), list.get(playerIndex)));
         }
     }
 
