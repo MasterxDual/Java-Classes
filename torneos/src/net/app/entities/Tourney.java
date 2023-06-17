@@ -1,7 +1,7 @@
 package net.app.entities;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -52,10 +52,32 @@ public class Tourney implements ITourney {
 
     @Override
     public void generateMatches() {
+        Iterator<IPlayer> iterador = playersSet.iterator();
+        while (iterador.hasNext()) {
+            IPlayer playerTemp = iterador.next();
+            if(iterador.hasNext()){
+                matches.add(new Match(playerTemp, iterador.next()));
+            }
+        }
+        /* Manera correcta pero ocupa mucho RAM porque copia una coleccion dentro de otra
+        import java.util.ArrayList;
         List<IPlayer> list = new ArrayList<>(playersSet);
         for(int playerIndex=1; playerIndex<playersSet.size(); playerIndex+=2) {
             matches.add(new Match(list.get(playerIndex-1), list.get(playerIndex)));
         }
+        */
+        /* Otra manera correcta pero no tan eficiente como la que dejé sin comentar
+        int indice = 0;
+        IPlayer playerTemp = null;
+        for (IPlayer player : playersSet) {
+            if (indice % 2 == 0) {
+                playerTemp = player;
+            } else {
+                matches.add(new Match(playerTemp, player));
+            }
+            indice++;
+        }
+         */
     }
 
     @Override
