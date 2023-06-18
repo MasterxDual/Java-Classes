@@ -6,8 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.app.entities.utilities.Status;
 import net.app.exceptions.PlayerExistsException;
 import net.app.exceptions.PlayerIsOnAMatchException;
+import net.app.exceptions.PlayerNotExistsException;
 import net.app.interfaces.IMatch;
 import net.app.interfaces.IPlayer;
 import net.app.interfaces.ITourney;
@@ -45,9 +47,17 @@ public class Tourney implements ITourney {
     }
 
     @Override
-    public void removePlayer(IPlayer p) throws PlayerIsOnAMatchException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removePlayer'");
+    public void removePlayer(IPlayer p) throws PlayerIsOnAMatchException, PlayerNotExistsException {
+        if(playersSet.contains(p)) {
+            for (IMatch match : matches) {
+                if(match.getStatus() == Status.ACTIVE) {
+                    throw new PlayerIsOnAMatchException(p, match);
+                }
+            }
+            playersSet.remove(p);
+        } else {
+            throw new PlayerNotExistsException(p);
+        }
     }
 
     @Override
@@ -59,14 +69,14 @@ public class Tourney implements ITourney {
                 matches.add(new Match(playerTemp, iterador.next()));
             }
         }
-        /* Manera correcta pero ocupa mucho RAM porque copia una coleccion dentro de otra
+        /*Manera correcta pero ocupa mucho RAM porque copia una coleccion dentro de otra
         import java.util.ArrayList;
         List<IPlayer> list = new ArrayList<>(playersSet);
         for(int playerIndex=1; playerIndex<playersSet.size(); playerIndex+=2) {
             matches.add(new Match(list.get(playerIndex-1), list.get(playerIndex)));
         }
-        */
-        /* Otra manera correcta pero no tan eficiente como la que dejé sin comentar
+        
+        Otra manera correcta pero no tan eficiente como la que dejé sin comentar
         int indice = 0;
         IPlayer playerTemp = null;
         for (IPlayer player : playersSet) {
@@ -99,7 +109,6 @@ public class Tourney implements ITourney {
 
     @Override
     public void printScheduling() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'printScheduling'");
+        System.out.println(matches);
     }
 }

@@ -60,4 +60,10 @@ public class Match implements IMatch {
             throw new MatchIsInactiveException(player1.getName(), player2.getName());
         }
     }
+
+    @Override
+    public String toString() {
+        return "Estado:" + state + "\n"
+        + player1 + scores.get(player1) + "-" + scores.get(player2) + player2 + "\n";
+    }
 }

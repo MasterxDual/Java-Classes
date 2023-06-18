@@ -4,7 +4,6 @@ import net.app.interfaces.IPlayer;
 
 public class PlayerNotExistsException extends Exception {
     public PlayerNotExistsException(IPlayer player) {
-        // TODO Auto-generated method stub
-        super("");
+        super("El jugador " + player + "no existe en el torneo.");
     }
 }
