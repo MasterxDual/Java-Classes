@@ -23,7 +23,6 @@ public class Tourney implements ITourney {
         playersSet = new HashSet<>();
         matches = new LinkedList<>();
         this.name = name;
-        // TODO: write this constructor
     }
 
     @Override
@@ -109,6 +108,7 @@ public class Tourney implements ITourney {
 
     @Override
     public void printScheduling() {
+        //Rehacer
         System.out.println(matches);
     }
 }
