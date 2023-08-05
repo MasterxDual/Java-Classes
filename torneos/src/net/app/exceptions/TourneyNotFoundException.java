@@ -4,7 +4,6 @@ import net.app.interfaces.ITourney;
 
 public class TourneyNotFoundException extends Exception {
     public TourneyNotFoundException(ITourney tourney) {
-        // TODO Auto-generated method stub
-        super("");
+        super("El torneo " + tourney.getName() + " no fue encontrado.");
     }
 }
