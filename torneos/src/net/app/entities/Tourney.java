@@ -4,9 +4,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import net.app.entities.utilities.Status;
+import net.app.exceptions.PlayerAlreadyPlayedException;
 import net.app.exceptions.PlayerExistsException;
 import net.app.exceptions.PlayerIsOnAMatchException;
 import net.app.exceptions.PlayerNotExistsException;
@@ -96,19 +98,79 @@ public class Tourney implements ITourney {
 
     @Override
     public void switchPlayers() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'switchPlayers'");
+        Scanner scan = new Scanner(System.in);
+        System.out.println("What players do you want to switch?");
+        boolean searchingPlayer1 = true;
+        boolean searchingPlayer2 = true;
+        IPlayer pA = null;
+        IPlayer pB = null;
+
+        while(searchingPlayer1 || searchingPlayer2) {
+            System.out.println("Player 1:");
+            String player1 = scan.nextLine();
+            System.out.println("Player 2:");            
+            String player2 = scan.nextLine();
+            // Busco si el nombre del player1 y el player 2 están en el set de jugadores
+            for (IPlayer playerTemp : playersSet) {
+                if(searchingPlayer1) {
+                    searchingPlayer1 = !playerTemp.getName().equals(player1);
+                    pA = playerTemp;
+                }
+                if(searchingPlayer2) {
+                    searchingPlayer2 = !playerTemp.getName().equals(player2);
+                    pB = playerTemp;
+                }
+            }
+        }
+        try {
+            switchPlayers(pA, pB);
+        } catch (PlayerIsOnAMatchException | PlayerAlreadyPlayedException e) {
+            System.err.println(e.getMessage());
+        }
+        scan.close();
     }
 
     @Override
-    public void switchPlayers(IPlayer p1, IPlayer p2) throws PlayerIsOnAMatchException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'switchPlayers'");
+    public void switchPlayers(IPlayer p1, IPlayer p2) throws PlayerIsOnAMatchException, PlayerAlreadyPlayedException {
+        List<IMatch> copyMatches = new LinkedList<>(matches);
+        for (IMatch match : copyMatches) {
+            replaceIfExists(match, p1, p2);
+            replaceIfExists(match, p2, p1);
+        }
+    }
+
+    private void replaceIfExists(IMatch match, IPlayer pA, IPlayer pB) throws PlayerIsOnAMatchException, PlayerAlreadyPlayedException {
+            //Buscando pA en el player 1 del match y reemplazandolo por pB
+            if(match.getPlayer1().getName().equals(pA.getName())) {
+                if(match.getStatus() == Status.ACTIVE) {
+                    throw new PlayerIsOnAMatchException(pA, match);    
+                }
+                if(match.getStatus() == Status.FINISHED) {
+                    throw new PlayerAlreadyPlayedException(pA, match);
+                }
+                IPlayer contricante = match.getPlayer2();
+                matches.remove(match);
+                matches.add(new Match(pB, contricante));
+            }
+            //Buscando pA en el player 2 del match y reemplazandolo por pB
+            if(match.getPlayer2().getName().equals(pA.getName())) {
+                if(match.getStatus() == Status.ACTIVE) {
+                    throw new PlayerIsOnAMatchException(pA, match);    
+                }
+                if(match.getStatus() == Status.FINISHED) {
+                    throw new PlayerAlreadyPlayedException(pA, match);
+                }
+                IPlayer contricante = match.getPlayer1();
+                matches.remove(match);
+                matches.add(new Match(contricante, pB));
+          }
     }
 
     @Override
     public void printScheduling() {
-        //Rehacer
-        System.out.println(matches);
+        for (IMatch match : matches) {
+            System.out.println(match.toString());
+        }
     }
+
 }
